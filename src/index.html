@@ -11,7 +11,7 @@
   <body>
     <div class="stage">
       <div class="book" id="book">
-        <div class="page">
+        <div class="page" id="notePage" inert>
           <div class="page-inner">
             <button class="close-tab" id="closeTab" title="Close (Esc)" aria-label="Close notebook">
               &times;
@@ -28,7 +28,7 @@
 
         <div class="spine"></div>
 
-        <div class="cover" id="cover" tabindex="0" role="button" aria-label="Open notebook" data-tauri-drag-region="deep">
+        <div class="cover" id="cover" tabindex="0" role="button" aria-label="Open notebook" aria-expanded="false" aria-controls="notePage">
           <div class="cover-face cover-face-front">
             <div class="cover-border"></div>
             <h1 class="cover-title">DEATH<br />NOTE</h1>

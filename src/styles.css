@@ -28,6 +28,7 @@ body {
   height: 100vh;
   width: 100vw;
   perspective: 1300px;
+  padding: clamp(12px, 2.5vw, 24px);
   background: transparent;
 }
 
@@ -75,12 +76,9 @@ body {
   inset: 0;
   z-index: 4;
   pointer-events: none;
-  opacity: 0;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.55), transparent 42%);
-  transition: opacity 0.85s ease;
-}
-.book.open .page-shadow {
-  opacity: 0.3;
+  opacity: 0.16;
+  transform-origin: left center;
+  background: linear-gradient(to right, rgba(22, 12, 5, 0.85), rgba(35, 19, 8, 0.28) 38%, transparent 85%);
 }
 
 .page-inner {
@@ -152,16 +150,24 @@ body {
   transform-origin: left center;
   transform-style: preserve-3d;
   transform: rotateY(0deg);
-  /* closing: quick, no overshoot */
-  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
 }
 
 .book.open .cover {
-  transform: rotateY(-172deg);
-  /* opening: a bit of spring/weight to the swing */
-  transition: transform 1.05s cubic-bezier(0.3, 1.4, 0.55, 1);
   pointer-events: none;
+}
+
+.book.animating .cover {
+  will-change: transform;
+}
+
+.book.animating .page-shadow {
+  will-change: transform, opacity;
+}
+
+.book.dragging,
+.book.dragging .ruled {
+  cursor: grabbing;
+  user-select: none;
 }
 
 .cover-face {
@@ -184,6 +190,15 @@ body {
   inset: 0;
   pointer-events: none;
   background: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent 14%);
+}
+
+.cover-face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--cover-light, 0);
+  background: linear-gradient(105deg, transparent 12%, rgba(255, 226, 187, 0.55) 48%, transparent 80%);
 }
 
 .cover-face-front {
@@ -290,4 +305,10 @@ body {
 .cover:focus-visible {
   outline: 2px solid rgba(200, 60, 50, 0.7);
   outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .close-tab {
+    transition: none;
+  }
 }

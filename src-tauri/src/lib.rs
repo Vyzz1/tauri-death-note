@@ -23,7 +23,7 @@ pub fn run() {
                 .with_handler(|app, shortcut, event| {
                     if event.state() == ShortcutState::Pressed {
                         let toggle_shortcut =
-                            Shortcut::new(Some(Modifiers::CONTROL | Modifiers::SHIFT), Code::KeyD);
+                            Shortcut::new(Some(Modifiers::ALT | Modifiers::SHIFT), Code::KeyD);
                         if shortcut == &toggle_shortcut {
                             if let Some(window) = app.get_webview_window("main") {
                                 toggle_window(&window);
@@ -35,7 +35,7 @@ pub fn run() {
         )
         .setup(|app| {
             let toggle_shortcut =
-                Shortcut::new(Some(Modifiers::CONTROL | Modifiers::SHIFT), Code::KeyD);
+                Shortcut::new(Some(Modifiers::ALT | Modifiers::SHIFT), Code::KeyD);
             app.global_shortcut().register(toggle_shortcut)?;
 
             let show_i = MenuItem::with_id(app, "show", "Open", true, None::<&str>)?;
@@ -46,7 +46,7 @@ pub fn run() {
                 .icon(app.default_window_icon().unwrap().clone())
                 .menu(&menu)
                 .show_menu_on_left_click(false)
-                .tooltip("Death Note — Ctrl+Shift+D to open")
+                .tooltip("Death Note — Alt+Shift+D to open")
                 .on_menu_event(|app, event| match event.id.as_ref() {
                     "show" => {
                         if let Some(window) = app.get_webview_window("main") {

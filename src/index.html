@@ -22,24 +22,21 @@
               spellcheck="false"
               placeholder="Write here..."
             ></textarea>
-            <div class="drag-handle" id="dragHandle" title="Drag left to close">
-              <span class="drag-handle-grip"></span>
-            </div>
+            <div class="page-shadow" aria-hidden="true"></div>
           </div>
         </div>
 
         <div class="spine"></div>
 
         <div class="cover" id="cover" tabindex="0" role="button" aria-label="Open notebook">
-          <div class="cover-face">
+          <div class="cover-face cover-face-front">
             <div class="cover-border"></div>
-            <div class="cover-eye">
-              <div class="cover-eye-iris"></div>
-            </div>
             <h1 class="cover-title">DEATH<br />NOTE</h1>
+            <div class="cover-divider"></div>
             <p class="cover-hint">Click or press Enter to open</p>
             <p class="cover-shortcut">Ctrl+Shift+D — opens from anywhere</p>
           </div>
+          <div class="cover-face cover-face-back"></div>
         </div>
       </div>
     </div>

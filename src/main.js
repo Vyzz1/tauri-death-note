@@ -2,11 +2,12 @@ const book = document.getElementById("book");
 const cover = document.getElementById("cover");
 const closeTab = document.getElementById("closeTab");
 const ruled = document.getElementById("ruled");
-const dragHandle = document.getElementById("dragHandle");
 
 const CLOSED_ANGLE = 0;
-const OPEN_ANGLE = -155;
+const OPEN_ANGLE = -172;
 const CLOSE_DRAG_THRESHOLD = 0.35;
+const SWIPE_COMMIT_PX = 90;
+const SWIPE_HORIZONTAL_BIAS = 2.2;
 
 const STORAGE_KEY = "deathnote-content";
 
@@ -64,10 +65,6 @@ cover.addEventListener("keydown", (event) => {
 
 closeTab.addEventListener("click", closeBook);
 
-let dragging = false;
-let dragStartX = 0;
-let dragSpan = 1;
-
 function settleDrag(ratio) {
   if (ratio > CLOSE_DRAG_THRESHOLD) {
     book.classList.remove("open");
@@ -79,34 +76,54 @@ function settleDrag(ratio) {
   cover.style.transform = "";
 }
 
-function onDragStart(event) {
-  if (!isOpen()) return;
-  dragging = true;
-  dragStartX = event.clientX;
-  dragSpan = Math.max(book.getBoundingClientRect().width * 0.65, 1);
-  cover.style.transition = "none";
-  dragHandle.setPointerCapture(event.pointerId);
-}
+// Swiping left-to-right anywhere on the written page closes the book,
+// mirroring how the cover physically sweeps back over the page. Short or
+// mostly-vertical drags are left alone so text selection keeps working.
+let swipe = null;
 
-function onDragMove(event) {
-  if (!dragging) return;
-  const draggedLeft = dragStartX - event.clientX;
-  const ratio = Math.min(Math.max(draggedLeft / dragSpan, 0), 1);
+function onSwipeMove(event) {
+  if (!swipe) return;
+  const dx = event.clientX - swipe.startX;
+  const dy = event.clientY - swipe.startY;
+
+  if (!swipe.committed) {
+    if (dx > SWIPE_COMMIT_PX && dx > Math.abs(dy) * SWIPE_HORIZONTAL_BIAS) {
+      swipe.committed = true;
+      window.getSelection()?.removeAllRanges();
+      ruled.blur();
+      cover.style.transition = "none";
+    } else {
+      return;
+    }
+  }
+
+  const ratio = Math.min(Math.max(dx / swipe.dragSpan, 0), 1);
   cover.style.transform = `rotateY(${OPEN_ANGLE + (CLOSED_ANGLE - OPEN_ANGLE) * ratio}deg)`;
 }
 
-function onDragEnd(event) {
-  if (!dragging) return;
-  dragging = false;
-  const draggedLeft = dragStartX - event.clientX;
-  const ratio = Math.min(Math.max(draggedLeft / dragSpan, 0), 1);
-  settleDrag(ratio);
+function onSwipeUp(event) {
+  window.removeEventListener("mousemove", onSwipeMove);
+  window.removeEventListener("mouseup", onSwipeUp);
+  if (!swipe) return;
+  if (swipe.committed) {
+    const dx = event.clientX - swipe.startX;
+    const ratio = Math.min(Math.max(dx / swipe.dragSpan, 0), 1);
+    settleDrag(ratio);
+  }
+  swipe = null;
 }
 
-dragHandle.addEventListener("pointerdown", onDragStart);
-dragHandle.addEventListener("pointermove", onDragMove);
-dragHandle.addEventListener("pointerup", onDragEnd);
-dragHandle.addEventListener("pointercancel", onDragEnd);
+ruled.addEventListener("mousedown", (event) => {
+  if (!isOpen() || event.button !== 0) return;
+  swipe = {
+    committed: false,
+    startX: event.clientX,
+    startY: event.clientY,
+    dragSpan: Math.max(book.getBoundingClientRect().width * 0.6, 1),
+  };
+  window.addEventListener("mousemove", onSwipeMove);
+  window.addEventListener("mouseup", onSwipeUp);
+});
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {

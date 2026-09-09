@@ -38,15 +38,15 @@ pub fn run() {
                 Shortcut::new(Some(Modifiers::CONTROL | Modifiers::SHIFT), Code::KeyD);
             app.global_shortcut().register(toggle_shortcut)?;
 
-            let show_i = MenuItem::with_id(app, "show", "Mở sổ", true, None::<&str>)?;
-            let quit_i = MenuItem::with_id(app, "quit", "Thoát", true, None::<&str>)?;
+            let show_i = MenuItem::with_id(app, "show", "Open", true, None::<&str>)?;
+            let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
 
             let _tray = TrayIconBuilder::new()
                 .icon(app.default_window_icon().unwrap().clone())
                 .menu(&menu)
                 .show_menu_on_left_click(false)
-                .tooltip("Death Note — Ctrl+Shift+D để mở")
+                .tooltip("Death Note — Ctrl+Shift+D to open")
                 .on_menu_event(|app, event| match event.id.as_ref() {
                     "show" => {
                         if let Some(window) = app.get_webview_window("main") {

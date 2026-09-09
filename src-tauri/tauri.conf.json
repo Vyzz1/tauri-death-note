@@ -12,10 +12,10 @@
       {
         "label": "main",
         "title": "Death Note",
-        "width": 560,
-        "height": 760,
-        "minWidth": 420,
-        "minHeight": 560,
+        "width": 760,
+        "height": 960,
+        "minWidth": 480,
+        "minHeight": 620,
         "resizable": true,
         "center": true,
         "visible": false

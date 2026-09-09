@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="styles.css" />
@@ -13,29 +13,32 @@
       <div class="book" id="book">
         <div class="page">
           <div class="page-inner">
-            <button class="close-tab" id="closeTab" title="Đóng sổ (Esc)" aria-label="Đóng sổ">
+            <button class="close-tab" id="closeTab" title="Close (Esc)" aria-label="Close notebook">
               &times;
             </button>
             <textarea
               id="ruled"
               class="ruled"
               spellcheck="false"
-              placeholder="Viết vào đây..."
+              placeholder="Write here..."
             ></textarea>
+            <div class="drag-handle" id="dragHandle" title="Drag left to close">
+              <span class="drag-handle-grip"></span>
+            </div>
           </div>
         </div>
 
         <div class="spine"></div>
 
-        <div class="cover" id="cover" tabindex="0" role="button" aria-label="Mở sổ tay">
+        <div class="cover" id="cover" tabindex="0" role="button" aria-label="Open notebook">
           <div class="cover-face">
             <div class="cover-border"></div>
             <div class="cover-eye">
               <div class="cover-eye-iris"></div>
             </div>
             <h1 class="cover-title">DEATH<br />NOTE</h1>
-            <p class="cover-hint">Nhấp hoặc nhấn Enter để mở</p>
-            <p class="cover-shortcut">Ctrl+Shift+D — mở ở bất kỳ đâu</p>
+            <p class="cover-hint">Click or press Enter to open</p>
+            <p class="cover-shortcut">Ctrl+Shift+D — opens from anywhere</p>
           </div>
         </div>
       </div>

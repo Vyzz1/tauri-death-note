@@ -6,9 +6,14 @@ use tauri::{
 use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Modifiers, Shortcut, ShortcutState};
 
 fn toggle_window(window: &WebviewWindow) {
-    if window.is_visible().unwrap_or(false) {
+    let visible = window.is_visible().unwrap_or(false);
+    let focused = window.is_focused().unwrap_or(false);
+    if visible && focused {
         let _ = window.hide();
     } else {
+        // Also covers the case where the window is visible but buried
+        // behind other windows (unfocused) — bring it to front instead
+        // of hiding an already-obscured window.
         let _ = window.show();
         let _ = window.set_focus();
     }
